@@ -1,0 +1,27 @@
+meta {
+  name: create ticket
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:8081/tickets
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJDVUZDN0hSWWdBMS1saEFhdWxYd1otTEo1N3lEblZBVDl1c0ttRjE1ckJnIn0.eyJleHAiOjE3NzE1MjEyMzYsImlhdCI6MTc3MTUyMDkzNiwiYXV0aF90aW1lIjoxNzcxNTIwNDU5LCJqdGkiOiJvbnJ0YWM6NzJjNDJkMDItMTBkZi1kZjI3LWM2ZWItMTkxYzg3M2I1ZTJiIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL3JlYWxtcy90aWNrZXRmbG93LXJlYWxtIiwic3ViIjoiMmEzYzBiNjYtM2RhMC00M2Y3LTkzNjItY2FmZWIxZjM2MzI1IiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiZnJvbnRlbmQiLCJzaWQiOiJEWWo1X05BbTFkazZ2cm1RTHFUdlRDaFgiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIiwic2NwIjpbIm93bjp0aWNrZXRzOmxpc3QiLCJvd246dGlja2V0cy1jb21tZW50czpjcmVhdGUiLCJ0aWNrZXRzOmNyZWF0ZSIsIm93bjp0aWNrZXRzOnJlYWQiLCJkZWZhdWx0LXJvbGVzLXRpY2tldGZsb3ctcmVhbG0iLCJVU0VSIl0sIm5hbWUiOiJHdXN0YXZvIEVzdGV2ZXMgR3VlZGVzIiwicHJlZmVycmVkX3VzZXJuYW1lIjoiZ3VzdGEiLCJnaXZlbl9uYW1lIjoiR3VzdGF2byIsImZhbWlseV9uYW1lIjoiRXN0ZXZlcyBHdWVkZXMifQ.Dz4D2FB2-1I9sl5g5vFmgOixeKpRhmW-VCV2SQb6CB0UR57bsPl20oFkSD6A__GRTn6MJ9WzL_SUnK8EMwSspEAt90ah_Ql6Q-lk4xBnfS4EU6UZi2aE1d4n-vEhlWo8lcVnr7-yApJ5mDftIB-j3bdP9ZYTcCkASpw_7FC9gOk1NzdVESPraGhkNZkKwvgTjepaHwYQG2A7E25mJEDzVLY4rzJCPxcn1yZwMD72bQqY9wxDRoTMugvrDEeq3n6Z3I_QcKYsbBwes1LbbnOuTa4EdVe_luv7bKy6tfreBmrHYvic-wrRjNFIOEGnZr4ZohYjMr2KzNwfwD9JCqpnzw
+}
+
+body:json {
+  {
+    "tile": "ir no supermercado",
+    "description": "comprar banana"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

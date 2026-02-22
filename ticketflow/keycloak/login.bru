@@ -1,0 +1,24 @@
+meta {
+  name: login
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8080/realms/ticketflow-realm/protocol/openid-connect/token
+  body: formUrlEncoded
+  auth: inherit
+}
+
+body:form-urlencoded {
+  grant_type: password
+  client_id: frontend
+  username: suporte
+  scope: openid ticketflow
+  password: 123
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

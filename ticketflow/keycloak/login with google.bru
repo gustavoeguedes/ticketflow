@@ -1,0 +1,15 @@
+meta {
+  name: login with google
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://localhost:8080/realms/ticket-flow/broker/google/endpoint
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}
