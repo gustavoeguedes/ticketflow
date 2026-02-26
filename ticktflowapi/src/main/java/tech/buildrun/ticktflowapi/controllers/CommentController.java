@@ -1,5 +1,6 @@
 package tech.buildrun.ticktflowapi.controllers;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,7 +35,7 @@ public class CommentController {
     @PreAuthorize("hasAnyAuthority('tickets-comments:create', 'own:tickets-comments:create')")
     public ResponseEntity<Void> addCommentToTicket(@AuthenticationPrincipal Jwt jwt,
                                                    @PathVariable UUID ticketId,
-                                                   @RequestBody AddCommentDto dto) {
+                                                   @RequestBody @Valid AddCommentDto dto) {
 
 
         var ticket = ticketRepository.findById(ticketId).orElseThrow(

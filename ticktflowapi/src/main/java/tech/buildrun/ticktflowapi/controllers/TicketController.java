@@ -100,7 +100,7 @@ public class TicketController {
         return ticket.getStatus().equals(TicketStatus.IN_PROGRESS) && (status.equals(TicketStatus.SOLVED) || status.equals(TicketStatus.REJECTED));
     }
 
-    @GetMapping
+    @GetMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('tickets:read', 'own:tickets:read')")
     public ResponseEntity<ReadTicketDto> getTicket(@PathVariable UUID id,
                                                    @AuthenticationPrincipal Jwt jwt) {
