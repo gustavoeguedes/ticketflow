@@ -17,6 +17,7 @@ import tech.buildrun.ticktflowapi.entities.TicketComment;
 import tech.buildrun.ticktflowapi.entities.TicketStatus;
 import tech.buildrun.ticktflowapi.repository.TicketCommentRepository;
 import tech.buildrun.ticktflowapi.repository.TicketRepository;
+import tech.buildrun.ticktflowapi.service.CommentService;
 
 import java.util.UUID;
 
@@ -25,10 +26,14 @@ public class CommentController {
 
     private final TicketRepository ticketRepository;
     private final TicketCommentRepository ticketCommentRepository;
+    private final CommentService commentService;
 
-    public CommentController(TicketRepository ticketRepository, TicketCommentRepository ticketCommentRepository) {
+    public CommentController(TicketRepository ticketRepository,
+                             TicketCommentRepository ticketCommentRepository,
+                             CommentService commentService) {
         this.ticketRepository = ticketRepository;
         this.ticketCommentRepository = ticketCommentRepository;
+        this.commentService = commentService;
     }
 
     @PostMapping(value = "/tickets/{ticketId}/comments")
@@ -37,33 +42,7 @@ public class CommentController {
                                                    @PathVariable UUID ticketId,
                                                    @RequestBody @Valid AddCommentDto dto) {
 
-
-        var ticket = ticketRepository.findById(ticketId).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND)
-        );
-
-
-
-
-
-        if (jwt.getClaimAsStringList("scp").contains("own:tickets-comments:create") &&
-                !ticket.getOwnerId().equals(UUID.fromString(jwt.getSubject()))) {
-            return ResponseEntity.status(403).build();
-        }
-
-        if(ticket.getStatus() != TicketStatus.IN_PROGRESS) {
-            return ResponseEntity.unprocessableContent().build();
-        }
-
-        TicketComment ticketComment;
-
-        if(jwt.getClaimAsStringList("scp").contains("tickets-comments:create")) {
-            ticketComment = dto.toEntity(ticket, AuthorType.SUPPORT, jwt.getSubject());
-        } else {
-            ticketComment = dto.toEntity(ticket, AuthorType.USER, jwt.getSubject());
-        }
-        ticketCommentRepository.save(ticketComment);
-
+        var commentAddedWithSuccess = commentService.addCommentToTicket(ticketId, dto, jwt);
 
         return ResponseEntity.ok().build();
     }
