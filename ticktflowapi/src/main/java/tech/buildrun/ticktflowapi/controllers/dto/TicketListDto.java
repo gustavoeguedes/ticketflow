@@ -9,6 +9,7 @@ public record TicketListDto(String id,
                             String title,
                             String description,
                             TicketStatus status,
+                            Integer commentCount,
                             Instant createdAt) {
     public static TicketListDto fromEntity(Ticket ticket) {
         return new TicketListDto(
@@ -16,6 +17,7 @@ public record TicketListDto(String id,
                 ticket.getTitle(),
                 ticket.getDescription(),
                 ticket.getStatus(),
+                ticket.getComments() != null ? ticket.getComments().size() : 0,
                 ticket.getCreatedAt()
         );
     }

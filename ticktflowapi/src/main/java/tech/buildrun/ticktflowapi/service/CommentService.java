@@ -39,12 +39,10 @@ public class CommentService {
 
         if(ticket.getStatus() == TicketStatus.IN_PROGRESS) {
             addCommentToTicketWithSuccess = true;
+            var ticketComment = getTicketComment(dto, jwt, ticket);
+            ticketCommentRepository.save(ticketComment);
         }
 
-        TicketComment ticketComment;
-
-        ticketComment = getTicketComment(dto, jwt, ticket);
-        ticketCommentRepository.save(ticketComment);
 
         return addCommentToTicketWithSuccess;
     }

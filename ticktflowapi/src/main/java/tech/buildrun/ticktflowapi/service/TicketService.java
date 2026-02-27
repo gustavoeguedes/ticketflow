@@ -1,5 +1,7 @@
 package tech.buildrun.ticktflowapi.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -33,16 +35,22 @@ public class TicketService {
         return ticketRepository.save(ticket);
     }
 
-    public List<TicketListDto> getTickets(Jwt jwt) {
-        List<TicketListDto> ticketList;
+    public Page<TicketListDto> getTickets(Jwt jwt, Integer page, Integer pageSize) {
+
+        var pageable = PageRequest.of(page, pageSize);
+
+        Page<TicketListDto> ticketsPage;
+
         if (jwt.getClaimAsStringList("scp").contains("tickets:list")) {
 
-            ticketList = this.getAllTickets();
+            ticketsPage = ticketRepository.findAll(pageable)
+            .map(TicketListDto::fromEntity);
 
         } else if (jwt.getClaimAsStringList("scp").contains("own:tickets:list")) {
 
             var userId = UUID.fromString(jwt.getSubject());
-            ticketList = this.getTicketsByOwnerId(userId);
+            ticketsPage = ticketRepository.findByOwnerId(userId, pageable)
+                    .map(TicketListDto::fromEntity);
 
             } else {
 
@@ -50,21 +58,10 @@ public class TicketService {
 
         }
 
-        return ticketList;
+        return ticketsPage;
 
     }
 
-    private List<TicketListDto> getAllTickets() {
-        return ticketRepository.findAll().stream()
-            .map(TicketListDto::fromEntity)
-            .toList();
-    }
-
-    private List<TicketListDto> getTicketsByOwnerId(UUID ownerId) {
-        return ticketRepository.findByOwnerId(ownerId).stream()
-            .map(TicketListDto::fromEntity)
-            .toList();
-    }
 
     public boolean updateTicketStatus(UUID id, UpdateStatusDto dto) {
         var ticket = ticketRepository.findById(id)

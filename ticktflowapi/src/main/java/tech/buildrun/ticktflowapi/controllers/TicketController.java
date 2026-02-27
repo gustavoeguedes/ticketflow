@@ -1,19 +1,12 @@
 package tech.buildrun.ticktflowapi.controllers;
 
-import org.springframework.http.HttpStatus;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-import tech.buildrun.ticktflowapi.controllers.dto.CreateTicketDto;
-import tech.buildrun.ticktflowapi.controllers.dto.ReadTicketDto;
-import tech.buildrun.ticktflowapi.controllers.dto.TicketListDto;
-import tech.buildrun.ticktflowapi.controllers.dto.UpdateStatusDto;
-import tech.buildrun.ticktflowapi.entities.Ticket;
-import tech.buildrun.ticktflowapi.entities.TicketStatus;
-import tech.buildrun.ticktflowapi.repository.TicketRepository;
+import tech.buildrun.ticktflowapi.controllers.dto.*;
 import tech.buildrun.ticktflowapi.service.TicketService;
 
 import java.net.URI;
@@ -34,7 +27,7 @@ public class TicketController {
     @PostMapping
     @PreAuthorize("hasAuthority('tickets:create')")
     public ResponseEntity<Void> createTicket(@AuthenticationPrincipal Jwt jwt,
-                                             @RequestBody CreateTicketDto dto
+                                             @RequestBody @Valid CreateTicketDto dto
                                              ) {
 
         var ownerId = jwt.getSubject();
@@ -46,11 +39,15 @@ public class TicketController {
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('tickets:list', 'own:tickets:list')")
-    public ResponseEntity<List<TicketListDto>> listTickets(@AuthenticationPrincipal Jwt jwt) {
+    public ResponseEntity<ApiResponse<TicketListDto>> listTickets(@AuthenticationPrincipal Jwt jwt,
+                                                                  @RequestParam(name = "page", defaultValue = "0") Integer page,
+                                                                  @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
 
-        var tickets = ticketService.getTickets(jwt);
+        var ticketsPage = ticketService.getTickets(jwt, page, pageSize);
 
-        return ResponseEntity.ok(tickets);
+        var resp = ApiResponse.of(ticketsPage);
+
+        return ResponseEntity.ok(resp);
     }
 
     @PatchMapping("/{id}/status")
